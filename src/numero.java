@@ -23,18 +23,21 @@ public class numero {
             }
         }
         for(int i = arraypos; i > 0; i--) raw_value[i] = 'E';
-        while(this.raw_value[126] == '0' && this.virg_pos != 127) this.right_shift(1);
+        this.update();
     }
 
 
-    public numero()
+    public numero(char s)
     {
-        this('+', "");
+        this.sign = s;
+        this.virg_pos = 127;
+        for(int i = 0; i < 126; i++) this.raw_value[i] = 'E';
+        this.raw_value[126] = '0';
+        
     }
 
     public numero(numero input)
     {
-        this();
         input.copy(this);
     }
 
@@ -86,6 +89,7 @@ public class numero {
                 this.virg_pos = this.virg_pos + times;
             }
         }
+        this.update();
     }
 
     // a function that returns the number of digits after the comma
@@ -230,6 +234,7 @@ public class numero {
         for(int i = 0; i < this.raw_value.length; i++) dest.raw_value[i] = this.raw_value[i];
         dest.virg_pos = this.virg_pos;
         dest.sign     = this.sign;
+        dest.update();
     }
 
     // searching a character in the array
@@ -275,6 +280,18 @@ public class numero {
             this.raw_value[126] = '0';
             this.virg_pos --;
         }
+    }
+    
+    public void update()
+    {
+        //deleting right zeroes if number isn't integer
+        if(this.post_comma() != 0) 
+            while(this.getChar(126) == '0' && this.post_comma() != 0) 
+                this.right_shift(1);
+        //assuring that ZERO is never negative
+        numero zero = new numero('+');
+        if(compare(this, '=', '=', zero, true))
+            this.sign = '+';
     }
 
     ////////debugging///////

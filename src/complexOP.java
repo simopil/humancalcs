@@ -3,9 +3,9 @@ public class complexOP{
     public static numero sum(numero add1, numero add2)
     {
 
-        numero appoggio1 = new numero(add1);
-        numero appoggio2 = new numero();
-        numero res       = new numero();
+        numero appoggio1 = new numero('+');
+        numero appoggio2 = new numero('+');
+        numero res       = new numero('+');
 
         add1.copy(appoggio1);
         add2.copy(appoggio2);
@@ -39,10 +39,7 @@ public class complexOP{
     // dividing result by the precision of appoggio1 (or appoggio2, same thing) in order to change comma position
     res.factor10(-(appoggio1.post_comma()));
     
-    //deleting right zeroes if number isn't integer
-    if(res.post_comma() != 0) 
-        while(res.getChar(126) == '0' && res.post_comma() != 0) 
-            res.right_shift(1);
+    res.update();
         
     return res;
     }
