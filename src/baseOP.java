@@ -23,10 +23,16 @@ public class baseOP
 {
     public static char somma(char add1, char add2)
     {
-             if(add1 == '0') return add2;
-        else if(add2 == '0') return add1;
+        //special E cases
+             if(add1 == 'E' && add2 == '0') return '0';
+        else if(add1 == '0' && add2 == 'E') return '0';
         else if(add1 == 'E') return add2;
         else if(add2 == 'E') return add1;
+        
+        //--------------------------------------------
+        
+        else if(add1 == '0') return add2;
+        else if(add2 == '0') return add1;
         else if(add1 == '1'){
             switch (add2) {
                 case '1': return '2';

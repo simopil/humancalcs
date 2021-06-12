@@ -38,6 +38,12 @@ public class complexOP{
 
     // dividing result by the precision of appoggio1 (or appoggio2, same thing) in order to change comma position
     res.factor10(-(appoggio1.post_comma()));
+    
+    //deleting right zeroes if number isn't integer
+    if(res.post_comma() != 0) 
+        while(res.getChar(126) == '0' && res.post_comma() != 0) 
+            res.right_shift(1);
+        
     return res;
     }
 

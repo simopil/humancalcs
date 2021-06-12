@@ -148,8 +148,8 @@ public class numero {
         {
             // compara i segni (se son due meno si inverte il risultato)
             if (!absolute && num1.sign == '-') {
+                if(op == '>') return true;
                 if(op == '<') return false;
-                if(op == '<') return true;
                 if(op == '=') return false;
             }
             if(op == '>') return false;
@@ -209,7 +209,13 @@ public class numero {
                         if(op == '>') return true;
                         if(op == '<') return false;
                         if(op == '=') return false;
-                    }
+                        
+                    } else {
+                        
+                        if(op == '>') return false;
+                        if(op == '<') return true;
+                        if(op == '=') return false;
+                        }
                 }
             }
         }
@@ -255,7 +261,7 @@ public class numero {
             if(this.bottom_search('E') != -1) end = this.bottom_search('E');
             for(int i = 125; i>end; i--) this.raw_value[i+1] = this.raw_value[i];
             this.raw_value[end+1] = 'E';
-            this.virg_pos ++;
+            if(this.virg_pos < 127) this.virg_pos ++;
         }
     }
 
