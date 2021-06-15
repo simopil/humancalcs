@@ -43,6 +43,50 @@ public class complexOP{
         
     return res;
     }
+    
+    public static numero subtraction(numero add1, numero add2)
+    {
+        numero mod_bigger = new numero('+');
+        numero mod_little = new numero('+');
+        numero        res;
+        //make bigger(longer int part) is always on top in subtraction
+        if(numero.compare(add1, '>', '=', add2, true)) {
+            add1.copy(mod_bigger);
+            add2.copy(mod_little);
+            res = new numero('+');
+        } else {
+            add2.copy(mod_bigger);
+            add1.copy(mod_little);
+            res = new numero('-');
+        }
+        //eventually normalizes decimal part to align digits
+        if(mod_bigger.post_comma() != 0 || mod_little.post_comma() != 0)
+        {
+            if (mod_bigger.post_comma() > mod_little.post_comma())        mod_little.left_shift(mod_bigger.post_comma() - mod_little.post_comma()); // mod_little less precise
+            else if (mod_bigger.post_comma() < mod_little.post_comma())   mod_bigger.left_shift(mod_little.post_comma() - mod_bigger.post_comma()); // mod_bigger less precise
+        }
+        //cycle
+        for(int i = 126; i > mod_bigger.bottom_search('E'); i--) {
+
+            if(res.getChar(i) == '1') {
+                if(baseOP.req_sottr(mod_bigger.getChar(i), '1')) {
+                    res.putChar('1', i-1);
+                    mod_bigger.putChar('9', i);
+                } else {
+                    mod_bigger.putChar(baseOP.sottr(mod_bigger.getChar(i), '1'), i);
+                }
+            }
+
+            if(baseOP.req_sottr(mod_bigger.getChar(i), mod_little.getChar(i)))
+                res.putChar('1', i-1);
+
+            res.putChar(baseOP.sottr(mod_bigger.getChar(i), mod_little.getChar(i)), i);
+        }
+        // dividing result by the precision in order to change comma position
+        res.factor10(-(mod_bigger.post_comma()));
+        res.update();
+        return res;
+    }
 
    /* public static numero mult(numero fact1, numero fact2)
     {

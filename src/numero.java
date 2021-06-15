@@ -33,7 +33,7 @@ public class numero {
         this.virg_pos = 127;
         for(int i = 0; i < 126; i++) this.raw_value[i] = 'E';
         this.raw_value[126] = '0';
-        
+
     }
 
     public numero(numero input)
@@ -213,9 +213,9 @@ public class numero {
                         if(op == '>') return true;
                         if(op == '<') return false;
                         if(op == '=') return false;
-                        
+
                     } else {
-                        
+
                         if(op == '>') return false;
                         if(op == '<') return true;
                         if(op == '=') return false;
@@ -281,19 +281,41 @@ public class numero {
             this.virg_pos --;
         }
     }
-    
+
     public void update()
     {
         //deleting right zeroes if number isn't integer
-        if(this.post_comma() != 0) 
-            while(this.getChar(126) == '0' && this.post_comma() != 0) 
+        if(this.post_comma() != 0)
+            while(this.getChar(126) == '0' && this.post_comma() != 0)
                 this.right_shift(1);
+        //deleting left zeroes before comma
+        for(int i = this.bottom_search('E')+1; i < this.virg_pos; i++) {
+            if(this.getChar(i) == '0') this.putChar('E', i);
+            else break;
+        }
         //assuring that ZERO is never negative
         numero zero = new numero('+');
         if(compare(this, '=', '=', zero, true))
             this.sign = '+';
     }
+    
+    public boolean isPositive()
+    {
+        if(this.sign == '+') return true;
+        else return false;
+    }
 
+    public boolean isNegative()
+    {
+        if(this.sign == '-') return true;
+        else return false;
+    }
+
+    public boolean haveSameSign(numero n)
+    {
+        if(this.sign == n.sign) return true;
+        else return false;
+    }
     ////////debugging///////
     public void printarray()
     {
@@ -310,6 +332,7 @@ public class numero {
     public void printnum()
     {
         if(this.sign != '+') System.out.print(this.sign);
+        //if(this.bottom_search('E') == this.virg_pos-1) System.out.print("0");
         for(int i = this.bottom_search('E')+1; i < 127 ; i++)
         {
             if(this.virg_pos == i) System.out.print(".");
