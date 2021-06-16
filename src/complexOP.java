@@ -38,12 +38,12 @@ public class complexOP{
 
     // dividing result by the precision of appoggio1 (or appoggio2, same thing) in order to change comma position
     res.factor10(-(appoggio1.post_comma()));
-    
+
     res.update();
-        
+
     return res;
     }
-    
+
     public static numero subtraction(numero add1, numero add2)
     {
         numero mod_bigger = new numero('+');
@@ -88,24 +88,37 @@ public class complexOP{
         return res;
     }
 
-   /* public static numero mult(numero fact1, numero fact2)
+    public static numero mult(numero fact1, numero fact2)
     {
-        numero res = new numero();
+        numero res = new numero('+');
+        int len1 = fact1.bottom_search('E'); //the position of the first 'E' gives us the length of the number
+        int len2 = fact2.bottom_search('E');
 
-        int len1 = fact1.search('E'); //the position of the first 'E' gives us the length of the number
-        int len2 = fact2.search('E');
-
-        for (int i=len2-1; i >= 0; i--)
+        for (int i = 126; i > len1; i--)
         {
-            numero row = new numero();
-            for (int ii=len1-1; ii >= 0; ii--)
+            numero aux_row = new numero('+');
+
+            for (int j = 126; j > len2; j--)
             {
-                if(baseOP.rip_moltp(fact1.raw_value[i], fact2.raw_value[ii]) != '0')
+                numero aux_op = new numero('+');
+
+                aux_op.putChar(baseOP.moltp(fact1.getChar(i), fact2.getChar(j)), 126);
+                aux_op.putChar(baseOP.rip_moltp(fact1.getChar(i), fact2.getChar(j)), 125);
+
+                aux_op.factor10(126-j);
+                aux_row = sum(aux_row, aux_op);
 
             }
-
+            aux_row.factor10(126-i);
+            res = sum(res, aux_row);
         }
-    return res;
-    }*/
+        res.set_comma(fact1.post_comma() + fact2.post_comma());
+
+        res.setSign(baseOP.moltp(fact1.getSign(), fact2.getSign()));
+
+        res.update();
+
+        return res;
+    }
 
 }

@@ -14,9 +14,9 @@ confronto(numero1, numero2, boolean conf, boolean equal) --> ritorna un booleano
                                                                                   conf=false equal=false [ true se numero1 < numero2 ]
                                                                                   conf=false equal=true  [ true se numero1 <= numero2 ]
 
-seleziona(numero1, numero2, boolean conf) ---> ritorna un carattere: il maggiore se conf=true, il minore se conf=false                                                                         
+seleziona(numero1, numero2, boolean conf) ---> ritorna un carattere: il maggiore se conf=true, il minore se conf=false
 
-                                                                                
+
 */
 
 public class baseOP
@@ -28,9 +28,9 @@ public class baseOP
         else if(add1 == '0' && add2 == 'E') return '0';
         else if(add1 == 'E') return add2;
         else if(add2 == 'E') return add1;
-        
+
         //--------------------------------------------
-        
+
         else if(add1 == '0') return add2;
         else if(add2 == '0') return add1;
         else if(add1 == '1'){
@@ -46,7 +46,7 @@ public class baseOP
                 case '9': return '0';
             }
         }
-        
+
         else if(add1 == '2') {
             switch (add2) {
                 case '1': return '3';
@@ -60,7 +60,7 @@ public class baseOP
                 case '9': return '1';
             }
         }
-        
+
         else if(add1 == '3') {
             switch (add2) {
                 case '1': return '4';
@@ -87,7 +87,7 @@ public class baseOP
                 case '9': return '3';
             }
         }
-        
+
         else if(add1 == '5') {
             switch (add2) {
                 case '1': return '6';
@@ -101,7 +101,7 @@ public class baseOP
                 case '9': return '4';
             }
         }
-        
+
         else if(add1 == '6') {
             switch (add2) {
                 case '1': return '7';
@@ -128,7 +128,7 @@ public class baseOP
                 case '9': return '6';
             }
         }
-        
+
         else if(add1 == '8') {
             switch (add2) {
                 case '1': return '9';
@@ -142,7 +142,7 @@ public class baseOP
                 case '9': return '7';
             }
         }
-        
+
         else if(add1 == '9') {
             switch (add2) {
                 case '1': return '0';
@@ -158,11 +158,11 @@ public class baseOP
         }
         return 'E';
     }
-    
+
     public static char rip_somma(char add1, char add2)
     {
-        if(confronto(add1, somma(add1, add2), true, false) || 
-           confronto(add2, somma(add1, add2), true, false)) 
+        if(confronto(add1, somma(add1, add2), true, false) ||
+           confronto(add2, somma(add1, add2), true, false))
         return '1';
         else return '0';
 
@@ -189,7 +189,7 @@ public class baseOP
                 case '9': return '1';
             }
         }
-        
+
         else if(add1 == '1') {
             switch (add2) {
                 case '2': return '9';
@@ -202,7 +202,7 @@ public class baseOP
                 case '9': return '2';
             }
         }
-        
+
         else if(add1 == '2') {
             switch (add2) {
                 case '1': return '1';
@@ -215,7 +215,7 @@ public class baseOP
                 case '9': return '3';
             }
         }
-        
+
         else if(add1 == '3') {
             switch (add2) {
                 case '1': return '2';
@@ -240,7 +240,7 @@ public class baseOP
                 case '9': return '5';
             }
         }
-        
+
         else if(add1 == '5') {
             switch (add2) {
                 case '1': return '4';
@@ -253,7 +253,7 @@ public class baseOP
                 case '9': return '6';
             }
         }
-        
+
         else if(add1 == '6') {
             switch (add2) {
                 case '1': return '5';
@@ -278,7 +278,7 @@ public class baseOP
                 case '9': return '8';
             }
         }
-        
+
         else if(add1 == '8') {
             switch (add2) {
                 case '1': return '7';
@@ -291,7 +291,7 @@ public class baseOP
                 case '9': return '9';
             }
         }
-        
+
         else if(add1 == '9') {
             switch (add2) {
                 case '1': return '8';
@@ -306,7 +306,7 @@ public class baseOP
         }
         return 'E';
     }
-    
+
     public static boolean req_sottr(char st, char nd)
     {
         char add1 = st;
@@ -415,9 +415,10 @@ public class baseOP
         }
         return false;
     }
-    
+
     public static char moltp (char fact1, char fact2)
     {
+        if(fact1 == 'E' || fact2 == 'E') return '0';
         if(fact1 == '0' || fact2 == '0') return '0';
         else if(fact1 == '+' && fact2 == '+') return '+';
         else if(fact1 == '+' && fact2 == '-') return '-';
@@ -435,16 +436,17 @@ public class baseOP
             return res;
         }
     }
-    
+
     public static char rip_moltp (char fact1, char fact2)
     {
+        if(fact1 == 'E' || fact2 == 'E') return '0';
         if(fact1 == '0' || fact2 == '0') return '0';
         else
         {
             char cnt = '0';
             char riporti = '0';
             char res = '0';
-            while(confronto(fact1, cnt, true, false)) 
+            while(confronto(fact1, cnt, true, false))
             {
                 riporti = somma(riporti, rip_somma(res, fact2));
                 res = somma(res, fact2);
@@ -453,7 +455,7 @@ public class baseOP
             return riporti;
         }
     }
-    
+
     public static boolean confronto(char num1, char num2, boolean conf, boolean equal)
     {
              if(num1 == num2 && equal == true) return true;
@@ -461,7 +463,7 @@ public class baseOP
         else if (req_sottr(num2, num1) && conf == true) return true;
         else return false;
     }
-    
+
     public static char seleziona(char num1, char num2, boolean conf)
     {
         if(confronto(num1, num2, true, true) && conf == true) return num1;

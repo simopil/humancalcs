@@ -1,20 +1,79 @@
 #!/usr/bin/bash
 
+#---------MULTIPLIER TESTing---------
+
+while [ true ]; do
+
+    #random--0/1 decimals
+    num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+    num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+
+    string="empty"
+    string=$(echo "$num1 * $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+
+
+    javastring="$(java -jar build/dist/*.jar $num1 $num2)"
+
+    echo "calculating $num1 * $num2  |$string|  |$javastring|"
+    if [[ $javastring != $string ]]; then
+        echo "broken at"
+        echo "$num1 * $num2"
+        echo "bash says $string"
+        echo "java says $javastring"
+        break;
+    fi
+
+done
+
+
+: <<'END_COMMENT'
+
+#--------SUBTRACTION TESTing------------
+
+while [ true ]; do
+
+    #random--0/1 decimals
+    num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+    num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+
+    string="empty"
+    string=$(echo "$num1 - $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+
+
+    javastring="$(java -jar build/dist/*.jar $num1 $num2)"
+
+    echo "calculating $num1 - $num2  |$string|  |$javastring|"
+    if [[ $javastring != $string ]]; then
+        echo "broken at"
+        echo "$num1 - $num2"
+        echo "bash says $string"
+        echo "java says $javastring"
+        break;
+    fi
+
+done
+
+END_COMMENT
 
 #-------SUM METHOD TESTing--------------
 : <<'END_COMMENT'
 while [ true ]; do
-    
+
     #random--0/1 decimals
+<<<<<<< HEAD
+    num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+    num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+=======
     num1=$(printf -- "1.%d\n" $(od -An -N4 -t u4 < /dev/urandom))
     num2=$(printf -- "1.%d\n" $(od -An -N4 -t u4 < /dev/urandom))
-    
+>>>>>>> 455373512471b439117cd1fbad07aa746668d8a9
+
     string="empty"
     string=$(echo "$num1 + $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
-    
-    
+
+
     javastring="$(java -jar build/dist/*.jar $num1 $num2)"
-    
+
     echo "calculating $num1 + $num2  |$string|  |$javastring|"
     if [[ $javastring != $string ]]; then
         echo "broken at"
@@ -25,8 +84,6 @@ while [ true ]; do
     fi
 
 done
-END_COMMENT
-
 
 ##----COMPARE METHOD TESTing--------------------
 ##(printf "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom)##
@@ -49,9 +106,9 @@ while [ true ]; do
     else
         string="false"
     fi
-    
+
     javastring="$(java -jar build/dist/*.jar $num1 $num2)"
-    
+
     echo "calculating $num1 > $num2  |$string|  |$javastring|"
     if [[ $javastring != $string ]]; then
         echo "broken at"
@@ -62,5 +119,4 @@ while [ true ]; do
     fi
 
 done
-
-
+END_COMMENT

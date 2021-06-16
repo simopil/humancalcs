@@ -1,5 +1,6 @@
 public class numero {
 
+    public static final numero ZERO = new numero('+');
     private char[] raw_value = new char[128];
     private char sign = '+';
     private int  virg_pos = 127;
@@ -73,11 +74,12 @@ public class numero {
     {
         if(times > 0)
         {
-            if(this.virg_pos + times < this.raw_value.length) //avoid overflow
+            if(times <= (127-this.virg_pos+this.bottom_search('E')+1))
             {
                 for(int i = 0; i<times; i++)
                 {
-                    if(this.virg_pos == 127) this.left_shift(1);
+                    if(this.virg_pos == 127)
+                        this.left_shift(1);
                     this.virg_pos++;
                 }
             }
@@ -96,6 +98,16 @@ public class numero {
     public int post_comma()
     {
         return 127 - this.virg_pos;
+    }
+
+    public void set_comma(int val)
+    {
+        if(val < 128)
+        {
+            this.virg_pos = 127-val;
+            for(int i = this.bottom_search('E'); i >= this.virg_pos; i--)
+                this.raw_value[i] = '0';
+        }
     }
 
     // a function that returns which of the two numbers has the highest amount of digits after the comma
@@ -293,12 +305,16 @@ public class numero {
             if(this.getChar(i) == '0') this.putChar('E', i);
             else break;
         }
+        //adding zeroes between comma and first digit of decimal part
+        for(int i = this.virg_pos; i <= this.bottom_search('E'); i++)
+            this.raw_value[i] = '0';
+        //assuring that ZERO has raw_pos[126] = '0' and not 'E'
+        if(this.raw_value[126] == 'E') this.raw_value[126] = '0';
         //assuring that ZERO is never negative
-        numero zero = new numero('+');
-        if(compare(this, '=', '=', zero, true))
+        if(compare(this, '=', '=', ZERO, true))
             this.sign = '+';
     }
-    
+
     public boolean isPositive()
     {
         if(this.sign == '+') return true;
@@ -315,6 +331,13 @@ public class numero {
     {
         if(this.sign == n.sign) return true;
         else return false;
+    }
+
+    public char getSign() {
+        return this.sign;
+    }
+    public void setSign(char s) {
+        this.sign = s;
     }
     ////////debugging///////
     public void printarray()
