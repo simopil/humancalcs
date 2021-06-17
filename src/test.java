@@ -8,6 +8,7 @@ public class test
         numero risultato;
 
         //risultato = complexOP.sum(test, test1);
+        //risultato = complexOP.subtraction(test, test1);
         risultato = complexOP.mult(test, test1);
         risultato.printnum();
         //System.out.println(numero.compare(test, '>', ' ', test1, false));
