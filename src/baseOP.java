@@ -23,9 +23,7 @@ public class baseOP
 {
     public static char somma(char add1, char add2)
     {
-             if(add1 == 'E') return add2;
-        else if(add2 == 'E') return add1;
-        else if(add1 == '0') return add2;
+             if(add1 == '0') return add2;
         else if(add2 == '0') return add1;
         else if(add1 == '1')
             switch (add2) {
@@ -123,7 +121,7 @@ public class baseOP
                 case '8': return '6';
                 case '9': return '7';
             }
-        else if(add1 == '9') 
+        else if(add1 == '9')
             switch (add2) {
                 case '1': return '0';
                 case '2': return '1';
@@ -135,13 +133,12 @@ public class baseOP
                 case '8': return '7';
                 case '9': return '8';
             }
-        return 'E';
+        return 'X';
     }
 
     public static char rip_somma(char add1, char add2)
     {
-             if (add1 == 'E' || add2 == 'E') return '0';
-        else if (add1 == '0' || add2 == '0') return '0';
+             if (add1 == '0' || add2 == '0') return '0';
         else if (add1 == '9' || add2 == '9') return '1';
         else if (add1 == '1' || add2 == '1') return '0';
         else if (add1 == '8' || add2 == '8') return '1';
@@ -151,15 +148,13 @@ public class baseOP
         else if (add1 == '6' || add2 == '6') return '1';
         else if (add1 == '4' || add2 == '4') return '0';
         else if (add1 == '5' || add2 == '5') return '1';
-        
-        return 'E';
+
+        return 'X';
     }
 
     public static char sottr(char add1, char add2)
     {
              if (add1 == add2) return '0';
-        else if (add1 == 'E')  return sottr('0', add2);
-        else if (add2 == 'E')  return sottr(add1, '0');
         else if (add2 == '0')  return add1;
         else if (add1 == '0')
             switch (add2) {
@@ -272,14 +267,12 @@ public class baseOP
                 case '7': return '2';
                 case '8': return '1';
             }
-        return 'E';
+        return 'X';
     }
 
     public static boolean req_sottr(char add1, char add2)
     {
              if (add1 == add2) return false;
-        else if (add1 == 'E')  return req_sottr('0', add2);
-        else if (add2 == 'E')  return req_sottr(add1, '0');
         else if (add2 == '0')  return false;
         else if (add1 == '0')  return true;
         else if (add1 == '9')  return false;
@@ -298,21 +291,20 @@ public class baseOP
         else if (add2 == '3')  return true;
         else if (add1 == '2')  return false;
         else if (add2 == '2')  return true;
-        
+
         return false;
     }
 
     public static char moltp (char fact1, char fact2)
     {
-             if (fact1 == 'E' || fact2 == 'E') return '0';
-        else if (fact1 == '0' || fact2 == '0') return '0';
+             if (fact1 == '0' || fact2 == '0') return '0';
         else if (fact1 == '1') return fact2;
         else if (fact2 == '1') return fact1;
         else if (fact1 == '+' && fact2 == '+') return '+';
         else if (fact1 == '+' && fact2 == '-') return '-';
         else if (fact1 == '-' && fact2 == '+') return '-';
         else if (fact1 == '-' && fact2 == '-') return '+';
-        else if (fact1 == '2') 
+        else if (fact1 == '2')
             switch (fact2) {
                 case '2': return '4';
                 case '3': return '6';
@@ -323,7 +315,7 @@ public class baseOP
                 case '8': return '6';
                 case '9': return '8';
             }
-        else if (fact1 == '3') 
+        else if (fact1 == '3')
             switch (fact2) {
                 case '2': return '6';
                 case '3': return '9';
@@ -334,7 +326,7 @@ public class baseOP
                 case '8': return '4';
                 case '9': return '7';
             }
-        else if (fact1 == '4') 
+        else if (fact1 == '4')
             switch (fact2) {
                 case '2': return '8';
                 case '3': return '2';
@@ -345,7 +337,7 @@ public class baseOP
                 case '8': return '2';
                 case '9': return '6';
             }
-        else if (fact1 == '5') 
+        else if (fact1 == '5')
             switch (fact2) {
                 case '2': return '0';
                 case '3': return '5';
@@ -356,7 +348,7 @@ public class baseOP
                 case '8': return '0';
                 case '9': return '5';
             }
-        else if (fact1 == '6') 
+        else if (fact1 == '6')
             switch (fact2) {
                 case '2': return '2';
                 case '3': return '8';
@@ -367,7 +359,7 @@ public class baseOP
                 case '8': return '8';
                 case '9': return '4';
             }
-        else if (fact1 == '7') 
+        else if (fact1 == '7')
             switch (fact2) {
                 case '2': return '4';
                 case '3': return '1';
@@ -378,7 +370,7 @@ public class baseOP
                 case '8': return '6';
                 case '9': return '3';
             }
-        else if (fact1 == '8') 
+        else if (fact1 == '8')
             switch (fact2) {
                 case '2': return '6';
                 case '3': return '4';
@@ -389,7 +381,7 @@ public class baseOP
                 case '8': return '4';
                 case '9': return '2';
             }
-        else if (fact1 == '9') 
+        else if (fact1 == '9')
             switch (fact2) {
                 case '2': return '8';
                 case '3': return '7';
@@ -400,15 +392,14 @@ public class baseOP
                 case '8': return '2';
                 case '9': return '1';
             }
-        return 'E';
+        return 'X';
     }
 
     public static char rip_moltp (char fact1, char fact2)
     {
-             if(fact1 == 'E' || fact2 == 'E') return '0';
-        else if(fact1 == '0' || fact2 == '0') return '0';
+             if(fact1 == '0' || fact2 == '0') return '0';
         else if(fact1 == '1' || fact2 == '1') return '0';
-        else if (fact1 == '2') 
+        else if (fact1 == '2')
             switch (fact2) {
                 case '2': return '0';
                 case '3': return '0';
@@ -419,7 +410,7 @@ public class baseOP
                 case '8': return '1';
                 case '9': return '1';
             }
-        else if (fact1 == '3') 
+        else if (fact1 == '3')
             switch (fact2) {
                 case '2': return '0';
                 case '3': return '0';
@@ -430,7 +421,7 @@ public class baseOP
                 case '8': return '2';
                 case '9': return '2';
             }
-        else if (fact1 == '4') 
+        else if (fact1 == '4')
             switch (fact2) {
                 case '2': return '0';
                 case '3': return '1';
@@ -441,7 +432,7 @@ public class baseOP
                 case '8': return '3';
                 case '9': return '3';
             }
-        else if (fact1 == '5') 
+        else if (fact1 == '5')
             switch (fact2) {
                 case '2': return '1';
                 case '3': return '1';
@@ -452,7 +443,7 @@ public class baseOP
                 case '8': return '4';
                 case '9': return '4';
             }
-        else if (fact1 == '6') 
+        else if (fact1 == '6')
             switch (fact2) {
                 case '2': return '1';
                 case '3': return '1';
@@ -463,7 +454,7 @@ public class baseOP
                 case '8': return '4';
                 case '9': return '5';
             }
-        else if (fact1 == '7') 
+        else if (fact1 == '7')
             switch (fact2) {
                 case '2': return '1';
                 case '3': return '2';
@@ -474,7 +465,7 @@ public class baseOP
                 case '8': return '5';
                 case '9': return '6';
             }
-        else if (fact1 == '8') 
+        else if (fact1 == '8')
             switch (fact2) {
                 case '2': return '1';
                 case '3': return '2';
@@ -485,7 +476,7 @@ public class baseOP
                 case '8': return '6';
                 case '9': return '7';
             }
-        else if (fact1 == '9') 
+        else if (fact1 == '9')
             switch (fact2) {
                 case '2': return '1';
                 case '3': return '2';
@@ -496,8 +487,8 @@ public class baseOP
                 case '8': return '7';
                 case '9': return '8';
             }
-        return 'E';
-        
+        return 'X';
+
     }
 
     public static boolean confronto(char num1, char num2, boolean conf, boolean equal)
@@ -512,5 +503,11 @@ public class baseOP
     {
         if(confronto(num1, num2, true, true) && conf == true) return num1;
         else return num2;
+    }
+
+    public static boolean isDigit(char c) {
+        if(c == '0' || c == '1' || c == '2' || c == '3' || c == '4' ||
+           c == '5' || c == '6' || c == '7' || c == '8' || c == '9') return true;
+        else return false;
     }
 }

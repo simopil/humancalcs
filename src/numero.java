@@ -1,39 +1,19 @@
 public class numero {
 
-    public static final numero ZERO = new numero('+');
-    private char[] raw_value = new char[128];
+    public static final numero ZERO = new numero('+', '0');
+    private char[] raw_value;
     private char sign = '+';
-    private int  virg_pos = 127;
+    private int post_comma_digits = 0;
     public String label; //etichetta per scopi futuri
 
     ///COSTRUTTORI/////
 
-    public numero(char s, String input)
+    public numero(char s, int postcomma, char[] digits)
     {
         this.sign = s;
-        int arraypos = 126;
-        for (int i = input.length()-1; i >= 0 ; i--)
-        {
-            if (arraypos == 0) break;
-            if(input.charAt(i) == '+' || input.charAt(i) == '-')         this.sign = input.charAt(i);
-            else if(input.charAt(i) == '.' || input.charAt(i) == ',')    this.virg_pos = arraypos+1;
-            else
-            {
-                this.putChar(input.charAt(i), arraypos);
-                arraypos--;
-            }
-        }
-        for(int i = arraypos; i > 0; i--) raw_value[i] = 'E';
-        this.update();
-    }
-
-
-    public numero(char s)
-    {
-        this.sign = s;
-        this.virg_pos = 127;
-        for(int i = 0; i < 126; i++) this.raw_value[i] = 'E';
-        this.raw_value[126] = '0';
+        this.raw_value = digits;
+        this.post_comma_digits = postcomma;
+        //this.update();
 
     }
 
@@ -42,30 +22,51 @@ public class numero {
         input.copy(this);
     }
 
-    public numero(String number)
+    public numero(char s, int length)
     {
-        this('+', number);
+        this.sign = s;
+        this.raw_value = new char[length];
+        for(int i = 0; i < this.raw_value.length; i++) this.raw_value[i] = '0';
     }
 
-    //////////////////
+    // constructor to create a one position array
+    public numero(char s, char d)
+    {
+        this.sign = s;
+        this.raw_value = new char[1];
+        this.raw_value[0] = d;
+    }
 
-    ////////          ////////
+
 
     // usage: obj.putChar('6', 8)
-    public char putChar(char c, int pos)
+    //logic: positive positions are integer part, negative pos are decimal part. Ex 235.325 in order: 2 1 0 -1 -2 -3
+    public int putChar(char c, int pos)
     {
-        if (pos <=0 || pos > 127) return 'X';
-        char old_val = this.raw_value[pos];
-        this.raw_value[pos] = c;
-        return old_val;
+        if (pos < 0) {
+            if(this.post_comma_digits >= -pos)
+                this.raw_value[this.pre_comma()-1-pos] = c;
+            else return -2;
+        } else {
+            if(pos < this.pre_comma())
+                this.raw_value[this.pre_comma()-1-pos] = c;
+            else return -1;
+        }
+        return 0;
     }
 
     // a function that returns the character at position pos
     public char getChar(int pos)
     {
-        if (pos >=0 && pos < 127)
-            return this.raw_value[pos];
-        else return 'X';
+        if (pos < 0) {
+            if(this.post_comma_digits >= -pos)
+                return this.raw_value[this.pre_comma()-1-pos];
+            else return '0';
+        } else {
+            if(pos < this.pre_comma())
+                return this.raw_value[this.pre_comma()-1-pos];
+            else return '0';
+        }
     }
 
 
@@ -74,47 +75,70 @@ public class numero {
     {
         if(times > 0)
         {
-            if(times <= (127-this.virg_pos+this.bottom_search('E')+1))
-            {
-                for(int i = 0; i<times; i++)
-                {
-                    if(this.virg_pos == 127)
-                        this.left_shift(1);
-                    this.virg_pos++;
-                }
+            if(times <= this.post_comma_digits)
+                this.post_comma_digits = this.post_comma_digits - times;
+            else {
+                // temp is used to enlarge the original array
+                char[] temp = new char[this.raw_value.length+(times-this.post_comma_digits)];
+                for(int i = 0; i < raw_value.length; i++)
+                    temp[i] = this.raw_value[i];
+                for(int i = this.raw_value.length; i < temp.length; i++)
+                    temp[i] = '0';
+                this.raw_value = temp;
+                this.post_comma_digits = 0;
+
             }
         }
         else if(times < 0)
         {
-            if(this.virg_pos + times > 0) //avoid overflow
-            {
-                this.virg_pos = this.virg_pos + times;
+            if(-times <= this.raw_value.length - this.post_comma_digits)
+                this.post_comma_digits = this.post_comma_digits - times;
+            else {
+                char[] temp = new char[ -times-this.post_comma_digits ];
+                for(int i = 0; i < temp.length-this.raw_value.length; i++)
+                    temp[i] = '0';
+                for(int i = 0; i < this.raw_value.length; i++)
+                    temp[i+temp.length-this.raw_value.length] = this.raw_value[i];
+                this.raw_value = temp;
+                this.post_comma_digits = this.raw_value.length;
             }
         }
-        this.update();
+        //this.update();
     }
 
     // a function that returns the number of digits after the comma
     public int post_comma()
     {
-        return 127 - this.virg_pos;
+        return this.post_comma_digits;
     }
 
-    public void set_comma(int val)
+    // a function that returns the number of digits before the comma
+    public int pre_comma()
     {
-        if(val < 128)
+        return this.raw_value.length - this.post_comma_digits;
+    }
+
+
+
+    public void set_post_comma(int val)
+    {
+        if(val <= this.raw_value.length)
         {
-            this.virg_pos = 127-val;
-            for(int i = this.bottom_search('E'); i >= this.virg_pos; i--)
-                this.raw_value[i] = '0';
+            this.post_comma_digits = val;
         }
     }
 
+
+    public static numero getLongestIntPart(numero num1, numero num2)
+    {
+        if(num1.pre_comma() >= num2.pre_comma()) return num1;
+        else return num2;
+    }
     // a function that returns which of the two numbers has the highest amount of digits after the comma
     public static numero getPrecisest(numero num1, numero num2)
     {
 
-        if(num1.post_comma() >= num2.post_comma()) return num1;
+        if(num1.post_comma_digits >= num2.post_comma_digits) return num1;
         else return num2;
     }
 
@@ -123,15 +147,12 @@ public class numero {
     {
         // calculates the number of digits after the comma by subtracting the position of the comma from the position
         // of the first occurrance of the 'E'
-        if(num1.post_comma() >= num2.post_comma()) return num2;
+        if(num1.post_comma_digits >= num2.post_comma_digits) return num2;
         else return num1;
     }
 
     public static boolean compare(numero num1, char op, char eq, numero num2, boolean absolute)
     {
-
-        int start1 = num1.virg_pos - num1.bottom_search('E') -1;
-        int start2 = num2.virg_pos - num2.bottom_search('E') -1;
 
         if(!absolute) {
             if(num1.sign == '+' && num2.sign == '-') {
@@ -147,7 +168,7 @@ public class numero {
         }
         // compara il numero di cifre prima e dopo la virg_pos
         //if num1 has more digits on the left
-        if (start1 > start2)
+        if (num1.pre_comma() > num2.pre_comma())
         {
             // compara i segni (se son due meno si inverte il risultato)
             if (!absolute && num1.sign == '-') {
@@ -160,7 +181,7 @@ public class numero {
             if(op == '=') return false;
         }
         //if num2 has more digits on the left
-        if (start1 < start2)
+        if (num1.pre_comma() < num2.pre_comma())
         {
             // compara i segni (se son due meno si inverte il risultato)
             if (!absolute && num1.sign == '-') {
@@ -172,12 +193,11 @@ public class numero {
             if(op == '<') return true;
             if(op == '=') return false;
         }
-
         //if both have same size on the left, performs digit-by-digit comparison of non-decimal part
-        for (int i = start1; i > 0; i--)
+        for (int i = num1.pre_comma()-1; i >= 0; i--)
         {
-            if (num1.raw_value[num1.virg_pos-i] != num2.raw_value[num2.virg_pos-i]) {
-                if (baseOP.confronto(num1.raw_value[num1.virg_pos-i], num2.raw_value[num2.virg_pos-i], ((num1.sign == '-' && absolute) || num1.sign == '+'), false))
+            if (num1.getChar(i) != num2.getChar(i)) {
+                if (baseOP.confronto(num1.getChar(i), num2.getChar(i), ((num1.sign == '-' && absolute) || num1.sign == '+'), false))
                 {
                     if(op == '>') return true;
                     if(op == '<') return false;
@@ -193,9 +213,9 @@ public class numero {
         int tries = 0;
         if (num1.post_comma() > num2.post_comma()) tries = num1.post_comma();
         else tries = num2.post_comma();
-        for(int i = 0; i < tries; i++)
+        for(int i = -1; i >= -tries; i--)
         {
-            if(num1.virg_pos+i == 127 && num2.virg_pos+i < 127) {
+            if(-i == num1.post_comma_digits && -i < num2.post_comma_digits) {
                 if(num1.sign == '-' && !absolute)
                 {
                     if(op == '>') return true;
@@ -207,7 +227,7 @@ public class numero {
                     if(op == '=') return false;
                 }
             }
-            else if(num1.virg_pos+i < 127 && num2.virg_pos+i == 127) {
+            else if(-i == num2.post_comma_digits && -i < num1.post_comma_digits) {
                 if(num1.sign == '-' && !absolute)
                 {
                     if(op == '>') return false;
@@ -219,8 +239,8 @@ public class numero {
                     if(op == '=') return false;
                 }
             } else {
-                if (num1.raw_value[num1.virg_pos+i] != num2.raw_value[num2.virg_pos+i]) {
-                    if (baseOP.confronto(num1.raw_value[num1.virg_pos+i], num2.raw_value[num2.virg_pos+i], ((num1.sign == '-' && absolute) || num1.sign == '+'), false))
+                if (num1.getChar(i) != num2.getChar(i)) {
+                    if (baseOP.confronto(num1.getChar(i), num2.getChar(i), ((num1.sign == '-' && absolute) || num1.sign == '+'), false))
                     {
                         if(op == '>') return true;
                         if(op == '<') return false;
@@ -244,9 +264,9 @@ public class numero {
     public void copy(numero dest)
     {
         for(int i = 0; i < this.raw_value.length; i++) dest.raw_value[i] = this.raw_value[i];
-        dest.virg_pos = this.virg_pos;
+        dest.post_comma_digits = this.post_comma_digits;
         dest.sign     = this.sign;
-        dest.update();
+        //dest.update();
     }
 
     // searching a character in the array
@@ -269,7 +289,7 @@ public class numero {
         }
         return -1;
     }
-
+    /*
     public void right_shift(int pos)
     {
         for(int p = 0; p<pos; p++)
@@ -281,9 +301,9 @@ public class numero {
             if(this.virg_pos < 127) this.virg_pos ++;
         }
     }
-
+    */
     // left shfti digits of n=pos positions
-    public void left_shift(int pos)
+    /*public void left_shift(int pos)
     {
         for(int p = 0; p<pos; p++)
         {
@@ -292,27 +312,40 @@ public class numero {
             this.raw_value[126] = '0';
             this.virg_pos --;
         }
-    }
+    }*/
 
     public void update()
     {
-        //deleting right zeroes if number isn't integer
-        if(this.post_comma() != 0)
-            while(this.getChar(126) == '0' && this.post_comma() != 0)
-                this.right_shift(1);
-        //deleting left zeroes before comma
-        for(int i = this.bottom_search('E')+1; i < this.virg_pos; i++) {
-            if(this.getChar(i) == '0') this.putChar('E', i);
-            else break;
+        // deleting left side useless zeroes
+        int l_zeroes = 0;
+        int r_zeroes = 0;
+        if(this.pre_comma() != 0)
+        {
+            for (int i = 0; i < this.pre_comma(); i++)
+            {
+                if(this.raw_value[i] != '0') break;
+                else l_zeroes++;
+            }
         }
-        //adding zeroes between comma and first digit of decimal part
-        for(int i = this.virg_pos; i <= this.bottom_search('E'); i++)
-            this.raw_value[i] = '0';
-        //assuring that ZERO has raw_pos[126] = '0' and not 'E'
-        if(this.raw_value[126] == 'E') this.raw_value[126] = '0';
-        //assuring that ZERO is never negative
-        if(compare(this, '=', '=', ZERO, true))
-            this.sign = '+';
+
+        // deleting right side useless zeroes
+        if(this.post_comma_digits > 0)
+        {
+            for(int i = this.raw_value.length-1; i >= this.raw_value.length-1-this.post_comma_digits; i--)
+            {
+                if(this.raw_value[i] != '0') break;
+                else r_zeroes++;
+            }
+            this.post_comma_digits = this.post_comma_digits - r_zeroes;
+        }
+
+        char[] new_raw_value = new char[this.raw_value.length-l_zeroes-r_zeroes];
+        for(int i = 0; i < new_raw_value.length; i++)
+        {
+            new_raw_value[i] = this.raw_value[i+l_zeroes];
+        }
+        this.raw_value = new_raw_value;
+
     }
 
     public boolean isPositive()
@@ -342,25 +375,23 @@ public class numero {
     ////////debugging///////
     public void printarray()
     {
-        System.out.print("{ "+this.sign);
+        System.out.print("{ ");
         for(int i = 0; i < this.raw_value.length; i++)
         {
-            if(this.virg_pos == i) System.out.print(".");
             System.out.print(this.raw_value[i]);
         }
         System.out.print(" }");
-        System.out.println("");
+        System.out.println("\nsign: "+this.sign+" \ndigits after comma: "+this.post_comma_digits+"\nsize: "+ this.raw_value.length);
     }
 
     public void printnum()
     {
         if(this.sign != '+') System.out.print(this.sign);
-        //if(this.bottom_search('E') == this.virg_pos-1) System.out.print("0");
-        for(int i = this.bottom_search('E')+1; i < 127 ; i++)
-        {
-            if(this.virg_pos == i) System.out.print(".");
-            System.out.print(this.raw_value[i]);
-        }
+        for(int i = this.pre_comma()-1; i >= 0; i--)
+            System.out.print(this.getChar(i));
+        if(this.post_comma_digits > 0) System.out.print(".");
+        for(int i = -1; i >= -this.post_comma_digits; i--)
+            System.out.print(this.getChar(i));
     }
 
 }
