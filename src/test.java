@@ -21,7 +21,6 @@ public class test
         //System.out.println();
         //one.printarray();
         risultato.printnum();
-
         //System.out.println(numero.compare(num1, '>', ' ', num2, false));
 
     }

@@ -263,7 +263,9 @@ public class numero {
 
     public void copy(numero dest)
     {
-        for(int i = 0; i < this.raw_value.length; i++) dest.raw_value[i] = this.raw_value[i];
+        char[] temp = new char[this.raw_value.length];
+        for(int i = 0; i < this.raw_value.length; i++) temp[i] = this.raw_value[i];
+        dest.raw_value = temp;
         dest.post_comma_digits = this.post_comma_digits;
         dest.sign     = this.sign;
         //dest.update();
@@ -316,7 +318,7 @@ public class numero {
 
     public void update()
     {
-        // deleting left side useless zeroes
+        //deleting left side useless zeroes
         int l_zeroes = 0;
         int r_zeroes = 0;
         if(this.pre_comma() != 0)
@@ -338,14 +340,18 @@ public class numero {
             }
             this.post_comma_digits = this.post_comma_digits - r_zeroes;
         }
-
-        char[] new_raw_value = new char[this.raw_value.length-l_zeroes-r_zeroes];
-        for(int i = 0; i < new_raw_value.length; i++)
+        //checking zero
+        if (this.raw_value.length-l_zeroes-r_zeroes == 0) 
+            ZERO.copy(this);
+        else 
         {
-            new_raw_value[i] = this.raw_value[i+l_zeroes];
+            char[] new_raw_value = new char[this.raw_value.length-l_zeroes-r_zeroes];
+            for(int i = 0; i < new_raw_value.length; i++)
+            {
+                new_raw_value[i] = this.raw_value[i+l_zeroes];
+            }
+            this.raw_value = new_raw_value;
         }
-        this.raw_value = new_raw_value;
-
     }
 
     public boolean isPositive()
