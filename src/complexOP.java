@@ -34,10 +34,10 @@ public class complexOP{
         int res_post_comma;
         if(add1.pre_comma() >= add2.pre_comma()) res_pre_comma = add1.pre_comma();
         else res_pre_comma = add2.pre_comma();
-            
+
         if(add1.post_comma() >= add2.post_comma()) res_post_comma = add1.post_comma();
         else res_post_comma = add2.post_comma();
-        
+
         //make bigger always on top in subtraction
         if(numero.compare(add1, '>', '=', add2, true)) {
             res = new numero('+', res_pre_comma+res_post_comma);
@@ -48,13 +48,13 @@ public class complexOP{
             mod_bigger = add2;
             mod_little = add1;
         }
-        
+
         // dividing result by the precision in order to change comma position
         res.factor10(-res_post_comma);
         //cycle
         char aux;
         for(int i = -res_post_comma; i < res_pre_comma; i++) {
-            
+
             aux = mod_bigger.getChar(i);
             if(res.getChar(i) == '1') {
                 if(baseOP.req_sottr(mod_bigger.getChar(i), '1')) {
@@ -76,6 +76,9 @@ public class complexOP{
 
     public static numero mult(numero fact1, numero fact2)
     {
+        //checking zeroes
+        if(numero.compare(fact1, '=', '=', numero.ZERO, true)) return numero.getZero();
+        if(numero.compare(fact2, '=', '=', numero.ZERO, true)) return numero.getZero();
 
         int len1 = fact1.post_comma()+fact1.pre_comma();
         int len2 = fact2.post_comma()+fact2.pre_comma();

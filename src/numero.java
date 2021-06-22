@@ -38,6 +38,63 @@ public class numero {
     }
 
 
+    public static numero formatNumber(String input)
+    {
+        //checking zero
+        boolean isZero = true;
+        for(int i = 0; i < input.length(); i++)
+            if(baseOP.isDigit(input.charAt(i)) && input.charAt(i) != '0') isZero = false;
+        if (isZero) return getZero();
+
+        //numero number;
+        int size = 0;
+        char[] digits;
+        char s;
+        int num_postcomma = 0;
+
+        //checking sign
+        if (input.charAt(0) == '-') s = '-';
+        else s = '+';
+
+        //counting number of digits
+        boolean firstNonZero = false;
+        int firstdigit = 0;
+        for (int i = 0; i < input.length(); i++)
+        {
+            if (input.charAt(i) == '.') break;
+            if (baseOP.isDigit(input.charAt(i)) && !firstNonZero && input.charAt(i) != '0')
+            {
+                firstNonZero = true;
+                firstdigit = i;
+            }
+            if (baseOP.isDigit(input.charAt(i)) && firstNonZero) size++;
+        }
+
+        if(input.indexOf('.') != -1)
+            for(int i = input.indexOf('.'); i < input.length(); i++)
+                if(baseOP.isDigit(input.charAt(i))) num_postcomma++;
+
+        // creation of arrays
+        size = size + num_postcomma;
+        digits = new char[size];
+
+        int index = 0;
+
+        if (size == num_postcomma)
+            firstdigit = input.indexOf('.')+1;
+
+        for (int i = firstdigit; i < input.length(); i++)
+        {
+            if (baseOP.isDigit(input.charAt(i)))
+            {
+                digits[index] = input.charAt(i);
+                index++;
+            }
+        }
+
+        return new numero(s, num_postcomma, digits);
+    }
+
 
     // usage: obj.putChar('6', 8)
     //logic: positive positions are integer part, negative pos are decimal part. Ex 235.325 in order: 2 1 0 -1 -2 -3
@@ -103,7 +160,6 @@ public class numero {
                 this.post_comma_digits = this.raw_value.length;
             }
         }
-        //this.update();
     }
 
     // a function that returns the number of digits after the comma
@@ -117,8 +173,6 @@ public class numero {
     {
         return this.raw_value.length - this.post_comma_digits;
     }
-
-
 
     public void set_post_comma(int val)
     {
@@ -145,10 +199,13 @@ public class numero {
     // a function that returns which of the two numbers has the least amount of digits after the comma
     public static numero getPreciseleast(numero num1, numero num2)
     {
-        // calculates the number of digits after the comma by subtracting the position of the comma from the position
-        // of the first occurrance of the 'E'
         if(num1.post_comma_digits >= num2.post_comma_digits) return num2;
         else return num1;
+    }
+
+    public static numero getZero()
+    {
+        return new numero(ZERO);
     }
 
     public static boolean compare(numero num1, char op, char eq, numero num2, boolean absolute)
@@ -166,7 +223,23 @@ public class numero {
                 if(op == '=') return false;
             }
         }
-        // compara il numero di cifre prima e dopo la virg_pos
+
+        //checking zeroes
+        if(num1.raw_value.length == 1 && num1.raw_value[0] == '0')
+        {
+            if(num2.raw_value.length == 1 && num2.raw_value[0] == '0')
+                if(op == '=' || eq == '=') return true;
+                else return false;
+            else
+                if(op == '<') return true;
+                else return false;
+        }
+        if(num2.raw_value.length == 1 && num2.raw_value[0] == '0')
+        {
+            if(op == '>') return true;
+            else return false;
+        }
+
         //if num1 has more digits on the left
         if (num1.pre_comma() > num2.pre_comma())
         {
@@ -341,9 +414,9 @@ public class numero {
             this.post_comma_digits = this.post_comma_digits - r_zeroes;
         }
         //checking zero
-        if (this.raw_value.length-l_zeroes-r_zeroes == 0) 
+        if (this.raw_value.length-l_zeroes-r_zeroes == 0)
             ZERO.copy(this);
-        else 
+        else
         {
             char[] new_raw_value = new char[this.raw_value.length-l_zeroes-r_zeroes];
             for(int i = 0; i < new_raw_value.length; i++)
@@ -378,6 +451,7 @@ public class numero {
     public void setSign(char s) {
         this.sign = s;
     }
+
     ////////debugging///////
     public void printarray()
     {
