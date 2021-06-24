@@ -8,6 +8,7 @@ public class numero {
 
     ///COSTRUTTORI/////
 
+    // standard constructor accepts sign, decimal digits amount and a char array of digits
     public numero(char s, int postcomma, char[] digits)
     {
         this.sign = s;
@@ -17,11 +18,13 @@ public class numero {
 
     }
 
+    // constructor to create a number that is a copy of another one
     public numero(numero input)
     {
         input.copy(this);
     }
 
+    // constructor to create a empty number with defined sign and length
     public numero(char s, int length)
     {
         this.sign = s;
@@ -29,7 +32,7 @@ public class numero {
         for(int i = 0; i < this.raw_value.length; i++) this.raw_value[i] = '0';
     }
 
-    // constructor to create a one position array
+    // constructor to create a single digit number
     public numero(char s, char d)
     {
         this.sign = s;
@@ -37,7 +40,7 @@ public class numero {
         this.raw_value[0] = d;
     }
 
-
+    // get valid char array from input string to call constructor
     public static numero formatNumber(String input)
     {
         //checking zero
@@ -127,7 +130,7 @@ public class numero {
     }
 
 
-    // multiplies and divides by a factor of 10-100-1000 etc
+    // multiplies (pos>0) and divides (pos<0) by a factor of 10(1/-1)-100(2/-2)-1000(3/-3) etc
     public void factor10(int times)
     {
         if(times > 0)
@@ -174,6 +177,7 @@ public class numero {
         return this.raw_value.length - this.post_comma_digits;
     }
 
+    // a function that set amount of decimal digits
     public void set_post_comma(int val)
     {
         if(val <= this.raw_value.length)
@@ -182,7 +186,7 @@ public class numero {
         }
     }
 
-
+    // returns the numero object with more digits in integer part
     public static numero getLongestIntPart(numero num1, numero num2)
     {
         if(num1.pre_comma() >= num2.pre_comma()) return num1;
@@ -203,11 +207,13 @@ public class numero {
         else return num1;
     }
 
+    // creates a copy of ZERO and returns that
     public static numero getZero()
     {
         return new numero(ZERO);
     }
 
+    // comparison between two numero-object
     public static boolean compare(numero num1, char op, char eq, numero num2, boolean absolute)
     {
 
@@ -341,7 +347,6 @@ public class numero {
         dest.raw_value = temp;
         dest.post_comma_digits = this.post_comma_digits;
         dest.sign     = this.sign;
-        //dest.update();
     }
 
     // searching a character in the array
@@ -364,30 +369,6 @@ public class numero {
         }
         return -1;
     }
-    /*
-    public void right_shift(int pos)
-    {
-        for(int p = 0; p<pos; p++)
-        {
-            int end = 0;
-            if(this.bottom_search('E') != -1) end = this.bottom_search('E');
-            for(int i = 125; i>end; i--) this.raw_value[i+1] = this.raw_value[i];
-            this.raw_value[end+1] = 'E';
-            if(this.virg_pos < 127) this.virg_pos ++;
-        }
-    }
-    */
-    // left shfti digits of n=pos positions
-    /*public void left_shift(int pos)
-    {
-        for(int p = 0; p<pos; p++)
-        {
-            int end = this.bottom_search('E');
-            for(int i = end; i<126; i++) this.raw_value[i] = this.raw_value[i+1];
-            this.raw_value[126] = '0';
-            this.virg_pos --;
-        }
-    }*/
 
     public void update()
     {

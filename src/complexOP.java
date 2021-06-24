@@ -64,7 +64,6 @@ public class complexOP{
                     aux = baseOP.sottr(mod_bigger.getChar(i), '1');
                 }
             }
-            //System.out.print("\nevaluating "+aux+" + "+mod_little.getChar(i)+" position: "+i+" post_comma: "+-res_pre_comma+"\n");
             if(baseOP.req_sottr(aux, mod_little.getChar(i)))
                 res.putChar('1', i+1);
 
@@ -72,6 +71,40 @@ public class complexOP{
         }
         res.update();
         return res;
+    }
+
+    public static numero algebraicSum(numero num1, numero num2, char operand)
+    {
+        if (num1.haveSameSign(num2))
+        {
+            if (operand == '+')
+            {
+                numero res = sum(num1, num2);
+                res.setSign(num1.getSign());
+                return res;
+            }
+            else
+            {
+                if (num1.getSign() == '+')   return subtraction(num1, num2);
+                else                         return subtraction(num2, num1);
+            }
+        }
+        else if (num1.getSign() == '+')
+        {
+            if (operand == '+')   return subtraction(num1, num2);
+            else                  return sum(num1, num2);
+        }
+        else
+        {
+            if (operand == '+')
+                return subtraction(num2, num1);
+            else
+            {
+                numero res = sum(num1, num2);
+                res.setSign('-');
+                return res;
+            }
+        }
     }
 
     public static numero mult(numero fact1, numero fact2)

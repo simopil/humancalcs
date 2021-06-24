@@ -2,24 +2,95 @@
 
 case $1 in
 
+    algsum)
+        #--------ALGEBRAIC-SUM TESTing------------
+
+        while [ true ]; do
+
+            #random--0/1 decimals
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+
+            string=$(echo "$num1 + $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar algsum $num1 $num2 "+")"
+
+            echo "calculating $num1 + $num2  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num1 + $num2"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            string=$(echo "$num1 - $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar algsum $num1 $num2 "-")"
+
+            echo "calculating $num1 - $num2  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num1 - $num2"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            #SWAPPING NUMBERS
+            string=$(echo "$num2 + $num1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar algsum $num2 $num1 "+")"
+
+            echo "calculating $num2 + $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 + $num1"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            string=$(echo "$num2 - $num1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar algsum $num2 $num1 "-")"
+
+            echo "calculating $num2 - $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 - $num1"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+        done
+    ;;
+
     mult)
         #---------MULTIPLIER TESTing---------
         while [ true ]; do
 
             #random--0/1 decimals
-            num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
-            num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
 
-            string="empty"
             string=$(echo "$num1 * $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
-
-
             javastring="$(java -jar build/dist/*.jar mult $num1 $num2)"
 
             echo "calculating $num1 * $num2  |$string|  |$javastring|"
             if [[ $javastring != $string ]]; then
                 echo "broken at"
                 echo "$num1 * $num2"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            #SWAPPING NUMBERS
+            string=$(echo "$num2 * $num1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar mult $num2 $num1)"
+
+            echo "calculating $num2 * $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 * $num1"
                 echo "bash says $string"
                 echo "java says $javastring"
                 break;
@@ -34,19 +105,29 @@ case $1 in
         while [ true ]; do
 
             #random--0/1 decimals
-            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
-            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
 
-            string="empty"
             string=$(echo "$num1 - $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
-
-
             javastring="$(java -jar build/dist/*.jar sub $num1 $num2)"
 
             echo "calculating $num1 - $num2  |$string|  |$javastring|"
             if [[ $javastring != $string ]]; then
                 echo "broken at"
                 echo "$num1 - $num2"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            #SWAPPING NUMBERS
+            string=$(echo "$num2 - $num1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar sub $num2 $num1)"
+
+            echo "calculating $num2 - $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 - $num1"
                 echo "bash says $string"
                 echo "java says $javastring"
                 break;
@@ -62,14 +143,11 @@ case $1 in
 
             #random--0/1 decimals
 
-            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
-            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
 
 
-            string="empty"
             string=$(echo "$num1 + $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
-
-
             javastring="$(java -jar build/dist/*.jar sum $num1 $num2)"
 
             echo "calculating $num1 + $num2  |$string|  |$javastring|"
@@ -81,18 +159,31 @@ case $1 in
                 break;
             fi
 
+            #SWAPPING NUMBERS
+            string=$(echo "$num2 + $num1" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
+            javastring="$(java -jar build/dist/*.jar sum $num2 $num1)"
+
+            echo "calculating $num2 + $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 + $num1"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
         done
     ;;
 
     comparison)
         ##----COMPARE METHOD TESTing--------------------
-        ##(printf "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom)##
+        ##(printf "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random)##
 
         while [ true ]; do
 
-            num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
-            num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/urandom) $(od -An -N4 -t u4 < /dev/urandom))
-            string="empty"
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -i < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+
             if (( $(echo "$num1 > $num2" |bc -l) )); then
                 string="true"
             else
@@ -105,6 +196,23 @@ case $1 in
             if [[ $javastring != $string ]]; then
                 echo "broken at"
                 echo "$num1 > $num2"
+                echo "bash says $string"
+                echo "java says $javastring"
+                break;
+            fi
+
+            if (( $(echo "$num2 > $num1" |bc -l) )); then
+                string="true"
+            else
+                string="false"
+            fi
+
+            javastring="$(java -jar build/dist/*.jar comparison $num2 $num1)"
+
+            echo "calculating $num2 > $num1  |$string|  |$javastring|"
+            if [[ $javastring != $string ]]; then
+                echo "broken at"
+                echo "$num2 > $num1"
                 echo "bash says $string"
                 echo "java says $javastring"
                 break;
