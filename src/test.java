@@ -7,7 +7,7 @@ public class test
 
         switch(args[0])
         {
-            case "comparison": { System.out.print(numero.compare(num1, '>', ' ', num2, false));                                      break; }
+            case "comparison": { System.out.print(complexOP.compare(num1, '>', '=', num2, false));                                   break; }
             case "sum"       : { numero risultato = complexOP.sum(num1, num2);                               risultato.printnum();   break; }
             case "sub"       : { numero risultato = complexOP.subtraction(num1, num2);                       risultato.printnum();   break; }
             case "mult"      : { numero risultato = complexOP.mult(num1, num2);                              risultato.printnum();   break; }

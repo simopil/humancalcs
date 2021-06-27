@@ -105,8 +105,8 @@ case $1 in
         while [ true ]; do
 
             #random--0/1 decimals
-            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
-            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random))
+            num1=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random) )
+            num2=$(printf -- "%d.%d\n" $(od -An -N4 -t u4 < /dev/random) $(od -An -N4 -t u4 < /dev/random) )
 
             string=$(echo "$num1 - $num2" | bc -l | sed '/\./ s/\.\{0,1\}0\{1,\}$//')
             javastring="$(java -jar build/dist/*.jar sub $num1 $num2)"

@@ -1,5 +1,91 @@
 public class complexOP{
 
+    // comparison between two numero-object
+    public static boolean compare(numero num1, char op, char eq, numero num2, boolean absolute)
+    {
+        if(!absolute) {
+            if(num1.getSign() == '+' && num2.getSign() == '-') {
+                if(op == '>') return true;
+                else          return false;
+            }
+            if(num1.getSign() == '-' && num2.getSign() == '+') {
+                if(op == '<') return true;
+                else          return false;
+            }
+        }
+        //checking zeroes
+        if(num1.pre_comma() == 1 && num1.post_comma() == 0 && num1.getChar(0) == '0')
+        {
+            if(num2.pre_comma() == 1 && num2.post_comma() == 0 && num2.getChar(0) == '0')
+                if(op == '=' || eq == '=') return true;
+                else return false;
+            else
+                if(op == '<') return true;
+                else return false;
+        }
+        if(num2.pre_comma() == 1 && num2.post_comma() == 0 && num2.getChar(0) == '0')
+        {
+            if(op == '>') return true;
+            else return false;
+        }
+        //if num1 has more digits on the left
+        if (num1.pre_comma() > num2.pre_comma())
+        {
+            // compara i segni (se son due meno si inverte il risultato)
+            if (!absolute && num1.getSign() == '-') {
+                if(op == '<') return true;
+                else          return false;
+            }
+            if(op == '>') return true;
+            else          return false;
+        }
+        //if num2 has more digits on the left
+        if (num1.pre_comma() < num2.pre_comma())
+        {
+            // compara i segni (se son due meno si inverte il risultato)
+            if (!absolute && num1.getSign() == '-') {
+                if(op == '>') return true;
+                else          return false;
+            }
+            if(op == '<') return true;
+            else          return false;
+        }
+        //if both have same size on the left, performs digit-by-digit comparison of non-decimal part
+        for (int i = num1.pre_comma()-1; i >= 0; i--)
+        {
+            if (num1.getChar(i) != num2.getChar(i)) {
+                if (baseOP.confronto(num1.getChar(i), num2.getChar(i), ((num1.getSign() == '-' && absolute) || num1.getSign() == '+'), false))
+                {
+                    if(op == '>') return true;
+                    else          return false;
+                } else {
+                    if(op == '<') return true;
+                    else          return false;
+                }
+            }
+        }
+        //if both are equals on the left, check digitwise on the right of the comma (if present)
+        int tries = 0;
+        if (num1.post_comma() > num2.post_comma()) tries = num1.post_comma();
+        else tries = num2.post_comma();
+        for(int i = -1; i >= -tries; i--)
+        {
+            if (num1.getChar(i) != num2.getChar(i)) {
+                if (baseOP.confronto(num1.getChar(i), num2.getChar(i), ((num1.getSign() == '-' && absolute) || num1.getSign() == '+'), false))
+                {
+                    if(op == '>') return true;
+                    else          return false;
+                } else {
+                    if(op == '<') return true;
+                    else          return false;
+                }
+            }
+        }
+        //assumed that only exception is EQUALITY
+        if(op == '=' || eq == '=') return true;
+        else return false;
+    }
+
     public static numero sum(numero add1, numero add2)
     {
 
@@ -39,7 +125,7 @@ public class complexOP{
         else res_post_comma = add2.post_comma();
 
         //make bigger always on top in subtraction
-        if(numero.compare(add1, '>', '=', add2, true)) {
+        if(compare(add1, '>', '=', add2, true)) {
             res = new numero('+', res_pre_comma+res_post_comma);
             mod_bigger = add1;
             mod_little = add2;
@@ -75,7 +161,7 @@ public class complexOP{
 
     public static numero algebraicSum(numero num1, numero num2, char operand)
     {
-        if (num1.haveSameSign(num2))
+        if (num1.getSign() == num2.getSign())
         {
             if (operand == '+')
             {
@@ -110,8 +196,8 @@ public class complexOP{
     public static numero mult(numero fact1, numero fact2)
     {
         //checking zeroes
-        if(numero.compare(fact1, '=', '=', numero.ZERO, true)) return numero.getZero();
-        if(numero.compare(fact2, '=', '=', numero.ZERO, true)) return numero.getZero();
+        if(compare(fact1, '=', '=', numero.ZERO, true)) return numero.getZero();
+        if(compare(fact2, '=', '=', numero.ZERO, true)) return numero.getZero();
 
         int len1 = fact1.post_comma()+fact1.pre_comma();
         int len2 = fact2.post_comma()+fact2.pre_comma();
